@@ -1,0 +1,27 @@
+{
+  "name": "Campamento Gecko",
+  "short_name": "Gecko",
+  "description": "Gestão profissional de acampamentos",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f1a0a",
+  "theme_color": "#4ade80",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "categories": [
+    "productivity",
+    "utilities"
+  ],
+  "lang": "pt"
+}
