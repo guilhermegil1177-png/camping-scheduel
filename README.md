@@ -1,91 +1,280 @@
-# 🦎 Campamento Gecko
+# 🏕️ Camp Daily Scheduler
 
-Aplicação web PWA para gestão profissional de acampamentos. Substitui WhatsApp e folhas de cálculo por uma plataforma centralizada e intuitiva.
+Uma aplicação PWA (Progressive Web App) para gerir esquemas diários de acampamento com suporte offline, notificações automáticas e sincronização com Supabase.
 
-## Stack Técnica
+## ✨ Características
 
-- **Frontend:** React 19 + TypeScript + Tailwind CSS 4 (Dark Theme)
-- **Backend:** Supabase (PostgreSQL + Auth + Realtime)
-- **Hosting:** Vercel (Serverless)
-- **PWA:** Service Worker + IndexedDB (funciona offline)
+### 📱 Funcionalidades Principais
+- **Timeline Vertical** - Visualização clara de todas as atividades do dia
+- **Cards Expansíveis** - Detalhes completos, notas e responsáveis
+- **Importar Esquemas** - Cole texto formatado e cria automaticamente
+- **Notificações** - Alertas 10 minutos antes de cada atividade
+- **Offline First** - Funciona completamente sem internet
+- **Sincronização** - Supabase para backup e sincronização
 
-## Funcionalidades
+### 🎨 Design
+- **Outdoor Adventure Aesthetic** - Paleta terrestre e cores naturais
+- **Responsive** - Otimizado para iPhone, iPad e desktop
+- **Dark Mode** - Adapta-se automaticamente ao tema do dispositivo
+- **Animações Suaves** - Transições elegantes e responsivas
 
-### ✅ Implementadas (v2.0)
-- 🔐 **Autenticação** via Supabase Auth (com modo demo offline)
-- 👥 **Roles:** Director, Monitor, Admin com permissões diferenciadas
-- 📅 **Dashboard** personalizado com atalhos e overview
-- 📋 **Cronogramas** - CRUD completo com timeline vertical
-- 📚 **Biblioteca de Atividades** - categorizada (outdoor, indoor, craft, sport)
-- 🔔 **Notificações** automáticas 10 min antes de cada atividade
-- 📱 **PWA** - funciona offline, instalável no iPhone/Android
-- 🌙 **Dark Theme** como padrão
+### 🔔 Notificações
+- Alertas automáticos 10 minutos antes de cada atividade
+- Funciona mesmo com a app fechada
+- Verificação a cada minuto
+- Fallback com toasts no navegador
 
-### 🔜 Roadmap (Phase 5-6)
-- 💬 Chat em tempo real por cronograma (Supabase Realtime)
-- 📊 Dashboard de relatórios (PDF/Excel)
-- 📅 Integração Google Calendar
-- 📱 App nativa (React Native/Expo)
+### 💾 Armazenamento
+- **IndexedDB** - Dados locais no dispositivo
+- **Service Worker** - Cache automático
+- **Supabase** - Sincronização em nuvem (opcional)
 
-## Instalação
+---
 
+## 🚀 Quick Start
+
+### Instalação
 ```bash
+# Clonar repositório
+git clone https://github.com/seu-usuario/camp-scheduler.git
+cd camp-scheduler
+
 # Instalar dependências
 pnpm install
-
-# Configurar variáveis de ambiente
-cp .env.local.example .env.local
-# Editar .env.local com as credenciais Supabase
 
 # Desenvolvimento
 pnpm dev
 
-# Build produção
+# Build
 pnpm build
 ```
 
-## Configuração Supabase
+### Usar a Aplicação
+1. **Abrir** em `http://localhost:3000`
+2. **Importar Dia** - Toque no ícone de upload
+3. **Cole o esquema** - Formato:
+   ```
+   Día X - TITULO
+   HH:MM Atividade
+   Descrição
+   - Nota 1
+   - Nota 2
+   Responsáveis: Pessoa1, Pessoa2
+   ```
+4. **Validar** e **Importar**
 
-1. Criar projeto em [supabase.com](https://supabase.com)
-2. Executar `supabase_schema.sql` no SQL Editor
-3. Copiar URL e anon key para `.env.local`
-4. Criar utilizador em Authentication > Users
+---
 
-**Sem Supabase:** A app funciona em modo demo com dados locais (IndexedDB).
+## 📋 Formato de Importação
 
-## Deploy (Vercel)
+### Exemplo Completo
+```
+Día 6 - PILONES
+07:50 Despertador
+Acordar os acampados
 
-1. Push para GitHub
-2. Conectar repositório no Vercel
-3. Adicionar variáveis de ambiente:
-   - `VITE_SUPABASE_URL`
-   - `VITE_SUPABASE_ANON_KEY`
-4. Deploy automático
+08:20 Desayuno
+Pequeno-almoço
+- Aron, Gil e Sergio ficam na instalação
+- Ruta: Nuria abre a ruta
+Responsáveis: Nuria, Paula, Ainara
 
-## Estrutura do Projeto
+08:45 Salida en bus
+Saída em autocarro para Jerte
+- Levar garrafas de água
+- Levar jogos de mesa
+Responsáveis: Luis, Ainara
+```
+
+### Regras
+- ✅ Primeira linha: `Día X - TITULO`
+- ✅ Horários: `HH:MM Atividade`
+- ✅ Notas: Começam com `-`
+- ✅ Responsáveis: `Responsáveis: Pessoa1, Pessoa2`
+- ✅ Deixe linhas em branco entre atividades
+
+---
+
+## 🔧 Configuração
+
+### Variáveis de Ambiente
+Crie `.env.local`:
+```
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your-anon-key-here
+```
+
+### Supabase (Opcional)
+1. Crie um projeto em [supabase.com](https://supabase.com)
+2. Configure as tabelas (veja `DEPLOYMENT_GUIDE.md`)
+3. Copie as credenciais para `.env.local`
+
+---
+
+## 📱 Instalar no iPhone
+
+### Via Safari
+1. Abra em Safari
+2. Toque em **Partilhar** (seta para cima)
+3. Selecione **"Adicionar à Tela Inicial"**
+4. Escolha um nome e toque em **"Adicionar"**
+
+### Ativar Notificações
+1. Toque no ícone ⚙️ (Configurações)
+2. Selecione **"Ativar Notificações"**
+3. Permita no navegador
+
+---
+
+## 🌐 Publicar em Vercel
+
+### Passo 1: GitHub
+```bash
+git init
+git add .
+git commit -m "Initial commit"
+git branch -M main
+git remote add origin https://github.com/seu-usuario/camp-scheduler.git
+git push -u origin main
+```
+
+### Passo 2: Vercel
+1. Aceda a [vercel.com/new](https://vercel.com/new)
+2. Importe o repositório GitHub
+3. Configure variáveis de ambiente
+4. Clique em "Deploy"
+
+### Passo 3: Domínio Personalizado (Opcional)
+1. No painel do Vercel: **Settings > Domains**
+2. Adicione seu domínio
+3. Configure DNS no seu registrador
+
+Veja `DEPLOYMENT_GUIDE.md` para instruções detalhadas.
+
+---
+
+## 🏗️ Arquitetura
+
+### Frontend
+- **React 19** - Framework UI
+- **Wouter** - Roteamento leve
+- **Tailwind CSS 4** - Estilos
+- **shadcn/ui** - Componentes
+
+### Storage
+- **IndexedDB** - Dados locais
+- **Service Worker** - Cache offline
+- **Supabase** - Backend (opcional)
+
+### PWA
+- **manifest.json** - Metadados da app
+- **Service Worker** - Funcionamento offline
+- **Notificações** - API de notificações do navegador
+
+---
+
+## 📚 Estrutura de Ficheiros
 
 ```
-client/src/
-├── pages/
-│   ├── Login.tsx          # Autenticação
-│   ├── Home.tsx           # Dashboard principal
-│   ├── Schedules.tsx      # CRUD cronogramas
-│   ├── Activities.tsx     # Biblioteca atividades
-│   ├── ImportDay.tsx      # Importar por texto
-│   └── Settings.tsx       # Configurações
-├── contexts/
-│   ├── AuthContext.tsx    # Auth + roles
-│   └── ThemeContext.tsx   # Dark/light theme
-├── components/
-│   └── TimeSlotCard.tsx   # Card de atividade
-├── hooks/
-│   ├── useOfflineStorage  # IndexedDB
-│   └── useNotificationManager
-├── lib/
-│   ├── supabase.ts        # Cliente Supabase
-│   └── sampleData.ts      # Dados de exemplo
-└── types/index.ts         # Tipos TypeScript
+camp-scheduler/
+├── client/
+│   ├── src/
+│   │   ├── pages/
+│   │   │   ├── Home.tsx          # Página principal
+│   │   │   ├── ImportDay.tsx     # Importar esquemas
+│   │   │   └── Settings.tsx      # Configurações
+│   │   ├── components/
+│   │   │   └── TimeSlotCard.tsx  # Card de atividade
+│   │   ├── hooks/
+│   │   │   ├── useOfflineStorage.ts
+│   │   │   └── useNotificationManager.ts
+│   │   ├── lib/
+│   │   │   ├── schemaParser.ts   # Parser de esquemas
+│   │   │   └── sampleData.ts     # Dados de exemplo
+│   │   ├── types/
+│   │   │   └── index.ts
+│   │   ├── App.tsx
+│   │   ├── main.tsx
+│   │   └── index.css
+│   ├── public/
+│   │   ├── manifest.json
+│   │   └── sw.js
+│   └── index.html
+├── package.json
+├── vite.config.ts
+├── tsconfig.json
+├── INSTALLATION_GUIDE.md
+├── DEPLOYMENT_GUIDE.md
+└── README.md
 ```
 
 ---
-*Campamento Gecko v2.0 • React 19 + Supabase + Tailwind CSS 4*
+
+## 🧪 Desenvolvimento
+
+### Scripts Disponíveis
+```bash
+pnpm dev      # Servidor de desenvolvimento
+pnpm build    # Build para produção
+pnpm preview  # Preview do build
+pnpm check    # Verificar tipos TypeScript
+pnpm format   # Formatar código
+```
+
+### Debug
+- **DevTools** - F12 no navegador
+- **Service Worker** - DevTools > Application > Service Workers
+- **IndexedDB** - DevTools > Application > Storage > IndexedDB
+- **Notificações** - DevTools > Console
+
+---
+
+## 🐛 Troubleshooting
+
+### Notificações não funcionam
+- Verifique se permitiu notificações no navegador
+- Tente "Testar Notificações" nas Configurações
+- Certifique-se de que o iPhone não está em modo silencioso
+
+### Dados desapareceram
+- Os dados são armazenados localmente
+- Se limpou o cache do Safari, os dados podem ter sido apagados
+- Use Supabase para backup automático
+
+### Build falha
+```bash
+pnpm check    # Verificar erros de tipo
+rm -rf node_modules pnpm-lock.yaml
+pnpm install
+```
+
+---
+
+## 📄 Licença
+
+MIT - Veja LICENSE para detalhes
+
+---
+
+## 👨‍💻 Desenvolvido com
+
+- React 19
+- Tailwind CSS 4
+- shadcn/ui
+- Vite
+- TypeScript
+
+---
+
+## 📞 Suporte
+
+Para problemas ou sugestões:
+1. Verifique a documentação
+2. Consulte `INSTALLATION_GUIDE.md` ou `DEPLOYMENT_GUIDE.md`
+3. Abra uma issue no GitHub
+
+---
+
+**Versão**: 1.0.0  
+**Última atualização**: Julho 2026  
+**Compatibilidade**: iOS 12+, Android 5+, Desktop (Chrome, Safari, Firefox)
