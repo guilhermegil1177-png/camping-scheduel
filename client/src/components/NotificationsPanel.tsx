@@ -1,65 +1,40 @@
 import { X, Bell } from 'lucide-react';
 
-interface Notification {
-  id: string;
-  text: string;
-  time: string;
-  read: boolean;
+interface Props {
+  onClose: () => void;
 }
 
-const DEMO_NOTIFS: Notification[] = [
-  { id: '1', text: '📋 Cronograma de amanhã publicado', time: 'há 5min', read: false },
-  { id: '2', text: '✅ Atividade "Desayuno" marcada como concluída', time: 'há 20min', read: false },
-  { id: '3', text: '💬 João Director: "Bom trabalho equipa!"', time: 'há 1h', read: true },
-  { id: '4', text: '📋 Cronograma do Dia 5 atualizado', time: 'ontem', read: true },
+const DEMO_NOTIFS = [
+  { id: '1', title: 'Atividade em 15 min', body: 'Despertador às 07:50', time: 'há 2 min', read: false },
+  { id: '2', title: 'Nova nota adicionada', body: 'Garrafas de água — Luis e Ainara', time: 'há 10 min', read: false },
+  { id: '3', title: 'Cronograma atualizado', body: 'Día 7 - OLIMPIADAS foi editado', time: 'há 1h', read: true },
 ];
 
-export default function NotificationsPanel({ onClose }: { onClose: () => void }) {
-  const unread = DEMO_NOTIFS.filter(n => !n.read);
-  const read = DEMO_NOTIFS.filter(n => n.read);
-
+export default function NotificationsPanel({ onClose }: Props) {
   return (
-    <div
-      className="absolute top-14 right-3 z-50 w-72 bg-card border border-border rounded-xl shadow-2xl overflow-hidden"
-      style={{ boxShadow: '0 8px 32px rgba(0,0,0,0.4)' }}
-    >
-      <div className="flex items-center justify-between px-4 py-3 border-b border-border">
-        <div className="flex items-center gap-2">
-          <Bell className="w-4 h-4 text-primary" />
-          <span className="font-semibold text-sm text-foreground">Notificações</span>
-          {unread.length > 0 && (
-            <span className="px-1.5 py-0.5 bg-primary text-primary-foreground text-[10px] font-bold rounded-full">{unread.length}</span>
-          )}
+    <div className="border-b border-border bg-card shadow-lg animate-slide-up">
+      <div className="container mx-auto px-4 py-3 max-w-lg">
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="font-bold text-foreground flex items-center gap-2">
+            <Bell className="w-4 h-4 text-primary" /> Notificações
+          </h2>
+          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-muted transition-colors text-muted-foreground">
+            <X className="w-4 h-4" />
+          </button>
         </div>
-        <button onClick={onClose} className="p-1 hover:bg-muted rounded text-muted-foreground">
-          <X className="w-4 h-4" />
-        </button>
-      </div>
-
-      <div className="max-h-80 overflow-y-auto">
-        {unread.length > 0 && (
-          <div>
-            <p className="px-4 py-2 text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Novas</p>
-            {unread.map(n => (
-              <div key={n.id} className="px-4 py-2.5 border-b border-border/50 bg-primary/5 hover:bg-primary/10 transition-colors cursor-pointer">
-                <p className="text-sm text-foreground">{n.text}</p>
-                <p className="text-[10px] text-muted-foreground mt-0.5">{n.time}</p>
+        <div className="space-y-2 max-h-64 overflow-y-auto">
+          {DEMO_NOTIFS.map(n => (
+            <div key={n.id} className={`rounded-xl p-3 border ${n.read ? 'border-border bg-muted/30' : 'border-primary/30 bg-primary/5'}`}>
+              <div className="flex items-start justify-between gap-2">
+                <div>
+                  <p className={`text-sm font-semibold ${n.read ? 'text-muted-foreground' : 'text-foreground'}`}>{n.title}</p>
+                  <p className="text-xs text-muted-foreground mt-0.5">{n.body}</p>
+                </div>
+                <span className="text-[10px] text-muted-foreground whitespace-nowrap">{n.time}</span>
               </div>
-            ))}
-          </div>
-        )}
-
-        {read.length > 0 && (
-          <div>
-            <p className="px-4 py-2 text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">Anteriores</p>
-            {read.map(n => (
-              <div key={n.id} className="px-4 py-2.5 border-b border-border/50 hover:bg-muted/50 transition-colors cursor-pointer">
-                <p className="text-sm text-muted-foreground">{n.text}</p>
-                <p className="text-[10px] text-muted-foreground/60 mt-0.5">{n.time}</p>
-              </div>
-            ))}
-          </div>
-        )}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
