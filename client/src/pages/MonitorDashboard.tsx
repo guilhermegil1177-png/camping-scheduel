@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { Bell, MessageCircle, CheckCircle2, ChevronDown, Clock, Users, FileText } from 'lucide-react';
+import { Bell, MessageCircle, CheckCircle2, ChevronDown, Users, FileText } from 'lucide-react';
+import { toast } from 'sonner';
 import Chat from '@/components/Chat';
 import NotificationsPanel from '@/components/NotificationsPanel';
 
@@ -46,11 +47,21 @@ export default function MonitorDashboard() {
 
   const toggleExpand = (id: string) => setExpanded(prev => prev === id ? null : id);
 
-  const toggleComplete = (id: string) => {
+  const isAssignedTo = (act: ActivitySlot) => {
+    if (act.assignees.length === 0) return true;
+    const userName = (user?.name || user?.email || '').toLowerCase();
+    return act.assignees.some(a => a.toLowerCase() === userName);
+  };
+
+  const toggleComplete = (act: ActivitySlot) => {
+    if (!isAssignedTo(act)) {
+      toast.error('Só podes marcar atividades às quais estás atribuído.');
+      return;
+    }
     setSchedule(prev => ({
       ...prev,
       activities: prev.activities.map(a =>
-        a.id === id ? { ...a, completed: !a.completed } : a
+        a.id === act.id ? { ...a, completed: !a.completed } : a
       ),
     }));
   };
@@ -72,7 +83,6 @@ export default function MonitorDashboard() {
             <p className="text-xs text-muted-foreground">Olá, {firstName} 👋</p>
           </div>
           <div className="flex items-center gap-1">
-            {/* Chat */}
             <button
               onClick={() => { setShowChat(true); setShowNotifs(false); }}
               className="relative p-2 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
@@ -80,7 +90,6 @@ export default function MonitorDashboard() {
               <MessageCircle className="w-5 h-5" />
               <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-primary rounded-full" />
             </button>
-            {/* Notifications */}
             <button
               onClick={() => { setShowNotifs(prev => !prev); setShowChat(false); }}
               className="relative p-2 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
@@ -96,7 +105,6 @@ export default function MonitorDashboard() {
         </div>
       </header>
 
-      {/* Notifications Panel */}
       {showNotifs && (
         <NotificationsPanel onClose={() => setShowNotifs(false)} />
       )}
@@ -125,6 +133,7 @@ export default function MonitorDashboard() {
         <div className="flex flex-col gap-3">
           {schedule.activities.map((act, i) => {
             const isOpen = expanded === act.id;
+            const canComplete = isAssignedTo(act);
             return (
               <div
                 key={act.id}
@@ -133,12 +142,10 @@ export default function MonitorDashboard() {
                 }`}
                 style={{ animationDelay: i * 40 + 'ms' }}
               >
-                {/* Card Header */}
                 <button
                   onClick={() => toggleExpand(act.id)}
                   className="w-full flex items-center gap-3 px-4 py-3 text-left"
                 >
-                  {/* Time badge */}
                   <div className={`flex-shrink-0 w-14 text-center py-1 rounded-lg text-xs font-bold border transition-colors ${
                     act.completed
                       ? 'bg-primary/10 text-primary border-primary/30'
@@ -160,7 +167,6 @@ export default function MonitorDashboard() {
                   <ChevronDown className={`w-4 h-4 text-muted-foreground flex-shrink-0 transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} />
                 </button>
 
-                {/* Expanded */}
                 {isOpen && (
                   <div className="px-4 pb-4 border-t border-border pt-3 space-y-3">
                     {act.description && (
@@ -177,7 +183,16 @@ export default function MonitorDashboard() {
                         </p>
                         <div className="flex flex-wrap gap-1.5">
                           {act.assignees.map((a, idx) => (
-                            <span key={idx} className="gecko-badge bg-primary/10 text-primary border border-primary/20">{a}</span>
+                            <span
+                              key={idx}
+                              className={`gecko-badge border ${
+                                a.toLowerCase() === (user?.name || user?.email || '').toLowerCase()
+                                  ? 'bg-primary/20 text-primary border-primary/40 font-semibold'
+                                  : 'bg-primary/10 text-primary border-primary/20'
+                              }`}
+                            >
+                              {a}
+                            </span>
                           ))}
                         </div>
                       </div>
@@ -200,14 +215,17 @@ export default function MonitorDashboard() {
                     )}
 
                     <button
-                      onClick={() => toggleComplete(act.id)}
+                      onClick={() => toggleComplete(act)}
+                      disabled={!canComplete}
                       className={`w-full py-2.5 rounded-lg text-sm font-semibold transition-all ${
-                        act.completed
-                          ? 'bg-muted text-muted-foreground border border-border hover:border-primary/40'
-                          : 'bg-primary text-primary-foreground hover:bg-primary/90'
+                        !canComplete
+                          ? 'bg-muted text-muted-foreground border border-border opacity-50 cursor-not-allowed'
+                          : act.completed
+                            ? 'bg-muted text-muted-foreground border border-border hover:border-primary/40'
+                            : 'bg-primary text-primary-foreground hover:bg-primary/90'
                       }`}
                     >
-                      {act.completed ? '↩️ Marcar como pendente' : '✅ Marcar como concluída'}
+                      {!canComplete ? '🔒 Não és responsável' : act.completed ? '↩️ Marcar como pendente' : '✅ Marcar como concluída'}
                     </button>
                   </div>
                 )}
@@ -217,7 +235,6 @@ export default function MonitorDashboard() {
         </div>
       </div>
 
-      {/* Chat Bottom Sheet */}
       {showChat && <Chat onClose={() => setShowChat(false)} />}
     </div>
   );
