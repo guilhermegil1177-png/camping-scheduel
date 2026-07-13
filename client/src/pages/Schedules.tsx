@@ -1,4 +1,4 @@
-aqui tens o file faz tu o update, pois eu não encontro o codigo okay (import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocation } from 'wouter';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/lib/supabase';
@@ -522,4 +522,4 @@ export default function Schedules() {
       </div>
     </div>
   );
-})
+}
